@@ -1,8 +1,12 @@
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/fetcher');
+const promise = promisfy('bluebird')
 
 let repoSchema = mongoose.Schema({
-  // TODO: your schema here!
+  username: String,
+  repo_name: String,
+  url: String,
+  stars: Number
 });
 
 let Repo = mongoose.model('Repo', repoSchema);
