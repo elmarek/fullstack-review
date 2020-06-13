@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import Search from './components/Search.jsx';
 import RepoList from './components/RepoList.jsx';
+import TopRepos from './components/top25.jsx';
 
 class App extends React.Component {
   constructor(props) {
@@ -10,6 +11,7 @@ class App extends React.Component {
     this.state = {
       repos: []
     }
+    this.search = this.search.bind(this)
   }
 
   componentDidMount() {
@@ -20,7 +22,6 @@ class App extends React.Component {
     fetch("http://localhost:1128/repos")
     .then(res => res.json())
     .then(result => {
-      console.log("fetched!!")
           this.setState({
           repos: result
         });
@@ -34,14 +35,15 @@ class App extends React.Component {
   search (term) {
     console.log(`${term} was searched`);
     // post request with searched term search
+    let termString = JSON.stringify({
+      term: term
+    })
     fetch("http://localhost:1128/repos", {
       method: "POST",
-      header: {
+      headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        "term": term
-      })
+      body: termString
     })
     //.then update the repo array
     .then((res) => {
@@ -56,7 +58,8 @@ class App extends React.Component {
     return (<div>
       <h1>Github Fetcher</h1>
       <RepoList repos={this.state.repos}/>
-      <Search onSearch={this.search.bind(this)}/>
+      <Search onSearch={this.search}/>
+      <TopRepos />
     </div>)
   }
 }
